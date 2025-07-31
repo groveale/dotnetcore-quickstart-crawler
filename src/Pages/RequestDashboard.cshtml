@@ -1,0 +1,257 @@
+@page
+@model RequestDashboardModel
+@{
+    ViewData["Title"] = "Request Dashboard";
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <h1 class="display-4 mb-4">Request Tracking Dashboard</h1>
+            
+            <!-- Summary Cards -->
+            <div class="row mb-4">
+                <div class="col-md-3">
+                    <div class="card bg-primary text-white">
+                        <div class="card-body">
+                            <h5 class="card-title">Total Requests (24h)</h5>
+                            <h2 class="card-text">@Model.TotalRequests</h2>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card bg-success text-white">
+                        <div class="card-body">
+                            <h5 class="card-title">Avg Processing Time</h5>
+                            <h2 class="card-text">@Math.Round(Model.AverageProcessingTime, 1)ms</h2>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card bg-info text-white">
+                        <div class="card-body">
+                            <h5 class="card-title">Human Requests</h5>
+                            <h2 class="card-text">@(Model.UserAgentStats.GetValueOrDefault(MyAzureWebApp.Models.UserAgentType.Human, 0))</h2>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card bg-warning text-dark">
+                        <div class="card-body">
+                            <h5 class="card-title">Bot/Crawler Requests</h5>
+                            <h2 class="card-text">@(Model.UserAgentStats.GetValueOrDefault(MyAzureWebApp.Models.UserAgentType.SearchBot, 0) + Model.UserAgentStats.GetValueOrDefault(MyAzureWebApp.Models.UserAgentType.Crawler, 0))</h2>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charts Section -->
+            <div class="row mb-4">
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5>User Agent Types (Last 24h)</h5>
+                        </div>
+                        <div class="card-body">
+                            @if (Model.UserAgentStats.Any())
+                            {
+                                <div class="table-responsive">
+                                    <table class="table table-sm">
+                                        <thead>
+                                            <tr>
+                                                <th>Type</th>
+                                                <th>Count</th>
+                                                <th>Percentage</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var stat in Model.UserAgentStats.OrderByDescending(s => s.Value))
+                                            {
+                                                var percentage = Model.TotalRequests > 0 ? (stat.Value * 100.0 / Model.TotalRequests) : 0;
+                                                <tr>
+                                                    <td>
+                                                        <span class="badge @GetBadgeClass(stat.Key)">@stat.Key</span>
+                                                    </td>
+                                                    <td>@stat.Value</td>
+                                                    <td>@Math.Round(percentage, 1)%</td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            }
+                            else
+                            {
+                                <p class="text-muted">No data available</p>
+                            }
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5>Top Detected Clients</h5>
+                        </div>
+                        <div class="card-body">
+                            @if (Model.TopClients.Any())
+                            {
+                                <div class="table-responsive">
+                                    <table class="table table-sm">
+                                        <thead>
+                                            <tr>
+                                                <th>Client</th>
+                                                <th>Requests</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var client in Model.TopClients)
+                                            {
+                                                <tr>
+                                                    <td>@client.Key</td>
+                                                    <td>@client.Value</td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            }
+                            else
+                            {
+                                <p class="text-muted">No data available</p>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Top Paths -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5>Most Requested Paths</h5>
+                        </div>
+                        <div class="card-body">
+                            @if (Model.TopPaths.Any())
+                            {
+                                <div class="table-responsive">
+                                    <table class="table table-sm">
+                                        <thead>
+                                            <tr>
+                                                <th>Path</th>
+                                                <th>Requests</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var path in Model.TopPaths)
+                                            {
+                                                <tr>
+                                                    <td><code>@path.Key</code></td>
+                                                    <td>@path.Value</td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            }
+                            else
+                            {
+                                <p class="text-muted">No data available</p>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Requests -->
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5>Recent Requests</h5>
+                        </div>
+                        <div class="card-body">
+                            @if (Model.RecentRequests.Any())
+                            {
+                                <div class="table-responsive">
+                                    <table class="table table-sm table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th>Timestamp</th>
+                                                <th>Method</th>
+                                                <th>Path</th>
+                                                <th>IP</th>
+                                                <th>Type</th>
+                                                <th>Client</th>
+                                                <th>Status</th>
+                                                <th>Time (ms)</th>
+                                                <th>User Agent</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var request in Model.RecentRequests)
+                                            {
+                                                <tr>
+                                                    <td>@request.Timestamp.ToString("yyyy-MM-dd HH:mm:ss")</td>
+                                                    <td><span class="badge bg-secondary">@request.Method</span></td>
+                                                    <td><code>@request.Path</code></td>
+                                                    <td>@request.IpAddress</td>
+                                                    <td><span class="badge @GetBadgeClass(request.UserAgentType)">@request.UserAgentType</span></td>
+                                                    <td>@(request.DetectedClient ?? "Unknown")</td>
+                                                    <td><span class="badge @GetStatusBadgeClass(request.StatusCode)">@request.StatusCode</span></td>
+                                                    <td>@request.ProcessingTimeMs</td>
+                                                    <td>
+                                                        @if (!string.IsNullOrEmpty(request.UserAgent))
+                                                        {
+                                                            <span title="@request.UserAgent">
+                                                                @(request.UserAgent.Length > 50 ? request.UserAgent[..50] + "..." : request.UserAgent)
+                                                            </span>
+                                                        }
+                                                    </td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            }
+                            else
+                            {
+                                <p class="text-muted">No requests found</p>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@functions {
+    private string GetBadgeClass(MyAzureWebApp.Models.UserAgentType userAgentType)
+    {
+        return userAgentType switch
+        {
+            MyAzureWebApp.Models.UserAgentType.Human => "bg-success",
+            MyAzureWebApp.Models.UserAgentType.SearchBot => "bg-primary",
+            MyAzureWebApp.Models.UserAgentType.SocialBot => "bg-info",
+            MyAzureWebApp.Models.UserAgentType.ApiTool => "bg-warning text-dark",
+            MyAzureWebApp.Models.UserAgentType.Crawler => "bg-danger",
+            MyAzureWebApp.Models.UserAgentType.Monitor => "bg-secondary",
+            MyAzureWebApp.Models.UserAgentType.SecurityScanner => "bg-dark",
+            _ => "bg-light text-dark"
+        };
+    }
+
+    private string GetStatusBadgeClass(int statusCode)
+    {
+        return statusCode switch
+        {
+            >= 200 and < 300 => "bg-success",
+            >= 300 and < 400 => "bg-warning text-dark",
+            >= 400 and < 500 => "bg-danger",
+            >= 500 => "bg-dark",
+            _ => "bg-secondary"
+        };
+    }
+}

@@ -5,6 +5,70 @@
 }
 
 <div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    <h1 class="display-4">Welcome to Request Tracker</h1>
+    <p>This web application tracks and analyzes all incoming HTTP requests, identifying different types of user agents including:</p>
+    
+    <div class="row mt-4">
+        <div class="col-md-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">🧑‍💻 Human Browsers</h5>
+                    <p class="card-text">Detects real users browsing with Chrome, Firefox, Safari, Edge, and other browsers.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">🤖 Search Bots</h5>
+                    <p class="card-text">Identifies search engine crawlers like Googlebot, Bingbot, and other legitimate indexing bots.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">🔧 API Tools</h5>
+                    <p class="card-text">Recognizes developer tools like Insomnia, Postman, cURL, and other API testing utilities.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row mt-3">
+        <div class="col-md-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">📱 Social Media Bots</h5>
+                    <p class="card-text">Tracks social media crawlers from Facebook, Twitter, LinkedIn, and other platforms.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">🕷️ Web Crawlers</h5>
+                    <p class="card-text">Detects custom crawlers, scrapers, and automated data collection tools.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">🔍 Monitoring Tools</h5>
+                    <p class="card-text">Identifies uptime monitors, security scanners, and other automated monitoring services.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="mt-4">
+        <a class="btn btn-primary btn-lg" asp-page="/RequestDashboard">View Request Dashboard</a>
+    </div>
+    
+    <div class="mt-4">
+        <p class="text-muted">
+            <small>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</small>
+        </p>
+    </div>
 </div>

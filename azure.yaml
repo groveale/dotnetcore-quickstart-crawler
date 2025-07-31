@@ -8,6 +8,9 @@
 name: quickstart-deploy-aspnet-core-app-service
 metadata:
   template: quickstart-deploy-aspnet-core-app-service@0.0.1-beta
+infra:
+  provider: bicep
+  path: ./infra
 services:
   web:
     project: ./src
