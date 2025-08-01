@@ -1,0 +1,23 @@
+# Robots.txt for Request Tracker Application
+
+# Block any user agent containing "GraphConnectors" (more general pattern)
+User-agent: *GraphConnectors*
+Disallow: /RequestDashboard
+Disallow: /TestApi
+Disallow: /Privacy
+Disallow: /Error
+Disallow: /lib/
+Disallow: /css/
+Disallow: /js/
+Disallow: /favicon.ico
+Allow: /
+
+# Allow all other bots full access
+User-agent: *
+Allow: /
+
+# Crawl-delay for aggressive crawlers
+Crawl-delay: 1
+
+# Sitemap location (optional)
+# Sitemap: https://app-web-drsvf4yw32j7q.azurewebsites.net/sitemap.xml

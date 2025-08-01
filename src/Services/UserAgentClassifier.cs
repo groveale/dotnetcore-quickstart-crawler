@@ -80,6 +80,7 @@ namespace MyAzureWebApp.Services
                 new(@"Selenium", RegexOptions.IgnoreCase | RegexOptions.Compiled),
                 new(@"PhantomJS", RegexOptions.IgnoreCase | RegexOptions.Compiled),
                 new(@"HeadlessChrome", RegexOptions.IgnoreCase | RegexOptions.Compiled),
+                new(@"GraphConnectors", RegexOptions.IgnoreCase | RegexOptions.Compiled),
                 new(@"bot", RegexOptions.IgnoreCase | RegexOptions.Compiled)
             }
         };
@@ -160,7 +161,8 @@ namespace MyAzureWebApp.Services
                 ["facebookexternalhit"] = "Facebook Bot",
                 ["Twitterbot"] = "Twitter Bot",
                 ["UptimeRobot"] = "UptimeRobot",
-                ["Pingdom"] = "Pingdom"
+                ["Pingdom"] = "Pingdom",
+                ["GraphConnectors"] = "Microsoft Graph Connectors"
             };
 
             foreach (var client in commonClients)
